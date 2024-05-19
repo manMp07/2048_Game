@@ -39,35 +39,139 @@ function addBox2(boxIndex){
     visited[boxIndex] = true;
     box[boxIndex].innerText = "2";
     box[boxIndex].classList.add("box2");
+    box[boxIndex].classList.add("appear");
+    setTimeout(() => {
+        box[boxIndex].classList.remove("appear");
+    }, 200);
 }
 
-/* document.addEventListener("keydown", handleKeyPress());
+document.addEventListener("keydown", handleKeyPress);
 
 function handleKeyPress(event){
     switch(event.key){
-        case ('ArrowUp') :
+        case 'ArrowUp' :
             moveUp();
             break;
-        case('ArrowDown'):
+        case 'ArrowDown':
             moveDown();
             break;
-        case('ArrowLeft'):
+        case 'ArrowLeft':
             moveLeft();
             break;
-        case('ArrowRight'):
+        case 'ArrowRight':
             moveRight();
             break;
     }
 }
 
-function moveRight(){
-    for(let row = 0; row < 4; row++){
-        let rightEmpty = new Array(4).fill(0);
-        for(let col = 3; col > 0; col--){
-            if(box[row][col].innerText == '')
-                rightEmpty[col-1]++;
-            else
-                rightEmpty[col-1] = rightEmpty[col];
+function moveRight() {
+    let hasChanged = false;
+
+    for (let i = 0; i < 4; i++) {
+        // Extract the current row
+        let row = [];
+        for (let j = 0; j < 4; j++) {
+            let idx = i * 4 + j;
+            if (box[idx].innerText !== '') {
+                row.push(parseInt(box[idx].innerText));
+            }
+        }
+
+        // Merge tiles
+        for (let j = row.length - 1; j > 0; j--) {
+            if (row[j] === row[j - 1]) {
+                row[j] *= 2;
+                row[j - 1] = 0;
+                score.innerText = parseInt(score.innerText) + row[j];
+            }
+        }
+
+        // Filter out the merged (zeros) and place the remaining to the right
+        row = row.filter(value => value !== 0);
+        while (row.length < 4) {
+            row.unshift(0);
+        }
+
+        // Update the grid
+        for (let j = 0; j < 4; j++) {
+            let idx = i * 4 + j;
+
+            if(row[j] === 0 && box[idx].innerText === '')
+                hasChanged = hasChanged;
+            else if (row[j].toString() !== box[idx].innerText)
+                hasChanged = true;
+
+
+            box[idx].innerText = (row[j] === 0) ? '' : row[j];
+            box[idx].className = 'tiles';
+            if (row[j] !== 0) {
+                box[idx].classList.add('box' + row[j]);
+            }
+        }
+
+        //update visited array
+        for(let j = 0; j < 4; j++){
+            let idx = i*4 + j;
+            visited[idx] = (box[idx].innerText !== '') ? true : false;
         }
     }
-} */
+
+    if (hasChanged) {
+        generateRandomTwo();
+    }
+}
+
+function moveLeft(){
+    let hasChanged = false;
+
+    for(let i = 0; i < 4; i++){
+        let row = [];
+        //create row array
+        for(let j = 0; j < 4; j++){
+            let idx = i*4 + j;
+            if(box[idx].innerText !== '')
+                row.push(parseInt(box[idx].innerText));
+        }
+
+        //merge tiles
+        for(let j = 0; j < row.length - 1; j++){
+            if(row[j] === row[j+1]){
+                row[j] *= 2;
+                row[j+1] = 0;
+                
+                score.innerText = parseInt(score.innerText) + row[j];
+            }
+        }
+
+        //filter
+        row = row.filter((val) => {
+            return val !== 0;
+        })
+        while(row.length < 4)
+            row.push(0);
+
+        //update original grid
+        for(let j = 0; j < 4; j++){
+            let idx = i*4 + j;
+
+            if(row[j] === 0 && box[idx].innerText === '')
+                hasChanged = hasChanged;
+            else if(row[j] !== parseInt(box[idx].innerText))
+                hasChanged = true;
+
+            box[idx].innerText = (row[j] === 0) ? '' : row[j];
+            box[idx].className = 'tiles';
+            if(row[j] !== 0)
+                box[idx].classList.add('box' + row[j]);
+        }
+        
+        //update visited array
+        for(let j = 0; j < 4; j++){
+            let idx = i*4 + j;
+            visited[idx] = (box[idx].innerText !== '') ? true : false;
+        }
+    }
+
+    if(hasChanged)
+        generateRandomTwo();
+}

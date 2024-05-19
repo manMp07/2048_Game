@@ -12,13 +12,13 @@
 
     --eightText: #F9F6F2;
     --eightBg: #F3B27A;
-    --oneSixText: #F9F6F2;
     --oneSixBg: #F69664;
 
-    --threeTwoText: #F9F6F2;
     --threeTwoBg: #F77C5F;
-    --sixFourText: #F9F6F2;
     --sixFourBg: #F75E3B;
+
+    --oneTwoEightBg: #EDD073;
+    --TwoFiveSixBg: #EDCC62;
 }
 
 *{
@@ -171,16 +171,40 @@
 }
 
 .box16{
-    color: var(--oneSixText);
+    color: var(--eightText);
     background-color: var(--oneSixBg);
 }
 
 .box32{
-    color: var(--threeTwoText);
+    color: var(--eightText);
     background-color: var(--threeTwoBg);
 }
 
 .box64{
-    color: var(--sixFourText);
+    color: var(--eightText);
     background-color: var(--sixFourBg);
+}
+
+.box128{
+    color: var(--eightText);
+    background-color: var(--oneTwoEightBg);
+}
+
+.box256{
+    color: var(--eightText);
+    background-color: var(--TwoFiveSixBg);
+}
+
+/* Animation for new tiles */
+@keyframes appear {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.appear {
+    animation: appear 0.2s ease-in-out;
 }
