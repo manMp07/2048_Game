@@ -175,3 +175,119 @@ function moveLeft(){
     if(hasChanged)
         generateRandomTwo();
 }
+
+function moveUp(){
+    let hasChanged = false;
+
+    // for each column
+    for(j = 0; j < 4; j++){
+        let col = [];
+
+        //Extract the current column
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+            if(box[idx].innerText != '')
+                col.push(parseInt(box[idx].innerText));
+        }
+
+        //Merge Tiles
+        for(let i = 0; i < col.length - 1; i++){
+            if(col[i] == col[i+1]){
+                col[i] *= 2;
+                col[i+1] = 0;
+
+                score.innerText = parseInt(score.innerText) + col[i];
+            }
+        }
+
+        col = col.filter((val) => {
+            return val !== 0;
+        })
+        while(col.length < 4)
+            col.push(0);
+
+        //comparing with original grid
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+
+            if(col[i] === 0 && box[idx].innerText === '')
+                hasChanged = hasChanged;
+            else if(col[i] !== parseInt(box[idx].innerText))
+                hasChanged = true;
+
+            box[idx].innerText = (col[i] === 0) ? '' : col[i];
+            box[idx].className = 'tiles';
+            if(col[i] !== 0)
+                box[idx].classList.add('box' + col[i]);
+        }
+
+        //update visited array
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+            visited[idx] = (box[idx].innerText !== '') ? true : false;
+        }
+    }
+
+    if(hasChanged)
+        generateRandomTwo();
+}
+
+function moveDown() {
+    let hasChanged = false;
+
+    for(let j = 0; j < 4; j++){
+        let col = [];
+
+        //Extracting the 
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+            if(box[idx].innerText !== '')
+                col.push(parseInt(box[idx].innerText));
+        }
+
+        //merge
+        for(let i = col.length-1; i > 0; i--){
+            if(col[i] == col[i-1]){
+                col[i] *= 2;
+                col[i-1] = 0;
+
+                score.innerText = parseInt(score.innerText) + col[i];
+            }
+        }
+
+        //removing 0s
+        col = col.filter(val => val != 0);
+        while(col.length < 4)
+            col.unshift(0);
+
+        //comparing with original
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+
+            if(col[i] === 0 && box[idx].innerText == '')
+                hasChanged = hasChanged;
+            else if(col[i] !== parseInt(box[idx].innerText))
+                hasChanged = true;
+            box[idx].innerText = (col[i] === 0) ? '' : col[i];
+            box[idx].className = "tiles";
+            if(col[i] !== 0)
+                box[idx].classList.add('box' + col[i]);
+        }
+
+        //updating visited array
+        for(let i = 0; i < 4; i++){
+            let idx = i*4 + j;
+            visited[idx] = (box[idx].innerText !== '') ? true : false ;
+        }
+    }
+
+    if(hasChanged)
+        generateRandomTwo();
+}
+/* 
+function mergeAnimation(idx){
+    box[idx].classList.add('merge');
+    setTimeout(() => {
+        box[idx].classList.remove('merge');
+    }, 200);
+} */
