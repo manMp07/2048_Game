@@ -3,27 +3,32 @@ let visited = new Array(16).fill(false);
 let contentBox = document.querySelector(".contentBox");
 let box = document.querySelectorAll(".tiles");
 let score = document.querySelector(".score");
-let newGameBtn = document.querySelector(".newGame-btn");
+let buttons = document.querySelectorAll("button");
+let overlay = document.querySelector(".overlay");
 
 document.addEventListener("DOMContentLoaded", () => {
     generateRandomTwo();
     generateRandomTwo();
 })
 
-newGameBtn.addEventListener("click", () => {
-    score.innerText = "0";
-    for(let val of box){
-        val.innerText = '';
-        val.className = '';
-        val.classList.add("tiles");
-    }
-
-    for(let i in visited)
-        visited[i] = false;
-
-    generateRandomTwo();
-    generateRandomTwo();
-})
+buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        score.innerText = "0";
+        for(let val of box){
+            val.innerText = '';
+            val.className = '';
+            val.classList.add("tiles");
+        }
+    
+        for(let i in visited)
+            visited[i] = false;
+    
+        overlay.classList.add("hide");
+    
+        generateRandomTwo();
+        generateRandomTwo();
+    })
+});
 
 function generateRandomTwo(){
     let randomBox = Math.floor(Math.random()*16);
@@ -43,6 +48,35 @@ function addBox2(boxIndex){
     setTimeout(() => {
         box[boxIndex].classList.remove("appear");
     }, 200);
+
+    if(checkGameOver()){
+        overlay.classList.remove("hide");
+        overlay.classList.add("appear");
+        setTimeout(() => {
+            overlay.classList.remove("appear");
+        }, 200);
+        return;
+    }
+}
+
+function checkGameOver(){
+    for(let i = 0; i < 4; i++){
+        for(let j = 0; j < 4; j++){
+            let curr = i*4 + j;
+            if(box[curr].innerText === '')
+                return false;
+
+            let down = (i+1)*4 + j;
+            let right = i*4 + j+1;
+
+            if(i+1 < 4 && (box[down].innerText == '' || box[curr].innerText == box[down].innerText))
+                return false;
+            if(j+1 < 4 && (box[right].innerText == '' || box[curr].innerText == box[right].innerText))
+                return false;
+        }
+    }
+
+    return true;
 }
 
 document.addEventListener("keydown", handleKeyPress);

@@ -17,7 +17,7 @@
                         <h2 class="scoreText">Score</h2>
                         <h2 class="score">0</h2>
                     </div>
-                    <button class="newGame-btn">New Game</button>
+                    <button class="newGame-btn button">New Game</button>
                 </div>
             </div>
 
@@ -39,11 +39,14 @@
                 <div class="tiles"></div> <!-- 15 -->
                 <div class="tiles"></div> <!-- 16 -->
             </div>
-        </div>
 
-        <!-- <div class="startBtn-Container">
-            <button class="startBtn">Start 2048 Game</button>
-        </div> -->
+            <div class="overlay hide">
+                <div class="gameOver-container">
+                    <h1 class="gameOver">Game Over!</h1>
+                    <button class="tryAgain-btn">Try Again</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
