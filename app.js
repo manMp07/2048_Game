@@ -100,6 +100,7 @@ function handleKeyPress(event){
 
 function moveRight() {
     let hasChanged = false;
+    let hasMerged = false;
 
     for (let i = 0; i < 4; i++) {
         // Extract the current row
@@ -117,6 +118,7 @@ function moveRight() {
                 row[j] *= 2;
                 row[j - 1] = 0;
                 score.innerText = parseInt(score.innerText) + row[j];
+                hasMerged = true;
             }
         }
 
@@ -125,6 +127,8 @@ function moveRight() {
         while (row.length < 4) {
             row.unshift(0);
         }
+
+        let mergedTiles = findMergedTilesRight(row, i);
 
         // Update the grid
         for (let j = 0; j < 4; j++) {
@@ -148,6 +152,9 @@ function moveRight() {
             let idx = i*4 + j;
             visited[idx] = (box[idx].innerText !== '') ? true : false;
         }
+
+        if(hasMerged)
+            addMerge(mergedTiles);
     }
 
     if (hasChanged) {
@@ -155,8 +162,34 @@ function moveRight() {
     }
 }
 
+function findMergedTilesRight(arr, i){
+    let k = 3;
+    let skip = 0;
+
+    let mergedTiles = [];
+    for(let j = 3; j >= 0; j--){
+        let idx = i*4 + j;
+        if(box[idx].innerText === '')
+            continue;
+
+        if(skip){
+            skip--;
+            continue;
+        }
+        
+        if(parseInt(box[idx].innerText) !== arr[k]){
+            mergedTiles.push(i*4 + k);
+            skip = 1;
+        }
+        k--;
+    }
+
+    return mergedTiles;
+}
+
 function moveLeft(){
     let hasChanged = false;
+    let hasMerged = false
 
     for(let i = 0; i < 4; i++){
         let row = [];
@@ -174,6 +207,7 @@ function moveLeft(){
                 row[j+1] = 0;
                 
                 score.innerText = parseInt(score.innerText) + row[j];
+                hasMerged = true;
             }
         }
 
@@ -183,6 +217,8 @@ function moveLeft(){
         })
         while(row.length < 4)
             row.push(0);
+
+        let mergedTiles = findMergedTilesLeft(row, i);
 
         //update original grid
         for(let j = 0; j < 4; j++){
@@ -204,14 +240,43 @@ function moveLeft(){
             let idx = i*4 + j;
             visited[idx] = (box[idx].innerText !== '') ? true : false;
         }
+
+        if(hasMerged)
+            addMerge(mergedTiles);
     }
 
     if(hasChanged)
         generateRandomTwo();
 }
 
+function findMergedTilesLeft(arr, i){
+    let k = 0;
+    let skip = 0;
+
+    let mergedTiles = [];
+    for(let j = 0; j < 4; j++){
+        let idx = i*4 + j;
+        if(box[idx].innerText === '')
+            continue;
+
+        if(skip){
+            skip--;
+            continue;
+        }
+        
+        if(parseInt(box[idx].innerText) !== arr[k]){
+            mergedTiles.push(i*4 + k);
+            skip = 1;
+        }
+        k++;
+    }
+
+    return mergedTiles;
+}
+
 function moveUp(){
     let hasChanged = false;
+    let hasMerged = false;
 
     // for each column
     for(j = 0; j < 4; j++){
@@ -231,6 +296,7 @@ function moveUp(){
                 col[i+1] = 0;
 
                 score.innerText = parseInt(score.innerText) + col[i];
+                hasMerged = true;
             }
         }
 
@@ -239,6 +305,8 @@ function moveUp(){
         })
         while(col.length < 4)
             col.push(0);
+
+        let mergedTiles = findMergedTilesUp(col, j);
 
         //comparing with original grid
         for(let i = 0; i < 4; i++){
@@ -260,14 +328,43 @@ function moveUp(){
             let idx = i*4 + j;
             visited[idx] = (box[idx].innerText !== '') ? true : false;
         }
+
+        isFinite(hasMerged)
+            addMerge(mergedTiles);
     }
 
     if(hasChanged)
         generateRandomTwo();
 }
 
+function findMergedTilesUp(arr, i){
+    let k = 0;
+    let skip = 0;
+
+    let mergedTiles = [];
+    for(let j = 0; j < 4; j++){
+        let idx = j*4 + i;
+        if(box[idx].innerText === '')
+            continue;
+
+        if(skip){
+            skip--;
+            continue;
+        }
+        
+        if(parseInt(box[idx].innerText) !== arr[k]){
+            mergedTiles.push(k*4 + i);
+            skip = 1;
+        }
+        k++;
+    }
+
+    return mergedTiles;
+}
+
 function moveDown() {
     let hasChanged = false;
+    let hasMerged = false;
 
     for(let j = 0; j < 4; j++){
         let col = [];
@@ -286,6 +383,7 @@ function moveDown() {
                 col[i-1] = 0;
 
                 score.innerText = parseInt(score.innerText) + col[i];
+                hasMerged = true;
             }
         }
 
@@ -293,6 +391,8 @@ function moveDown() {
         col = col.filter(val => val != 0);
         while(col.length < 4)
             col.unshift(0);
+
+        let mergedTiles = findMergedTilesDown(col, j);
 
         //comparing with original
         for(let i = 0; i < 4; i++){
@@ -313,10 +413,47 @@ function moveDown() {
             let idx = i*4 + j;
             visited[idx] = (box[idx].innerText !== '') ? true : false ;
         }
+
+        if(hasMerged)
+            addMerge(mergedTiles);
     }
 
     if(hasChanged)
         generateRandomTwo();
+}
+
+function findMergedTilesDown(arr, i){
+    let k = 3;
+    let skip = 0;
+
+    let mergedTiles = [];
+    for(let j = 3; j >= 0; j--){
+        let idx = j*4 + i;
+        if(box[idx].innerText === '')
+            continue;
+
+        if(skip){
+            skip--;
+            continue;
+        }
+        
+        if(parseInt(box[idx].innerText) !== arr[k]){
+            mergedTiles.push(k*4 + i);
+            skip = 1;
+        }
+        k--;
+    }
+
+    return mergedTiles;
+}
+
+function addMerge(mergedTiles){
+    mergedTiles.forEach(idx => {
+        box[idx].classList.add("merge");
+        setTimeout(() => {
+            box[idx].classList.remove("merge");
+        }, 200);
+    });
 }
 /* 
 function mergeAnimation(idx){
